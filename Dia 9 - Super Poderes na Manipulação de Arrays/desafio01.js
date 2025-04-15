@@ -10,13 +10,6 @@ const redesSociais = [
 	'Pinterest',
 ];
 
-// indexOf
-if (redesSociais[0]) {
-    console.log(0);
-} else {
-    console.log(-1);
-}
-
 // Funcao recriada para indexOf
 function meuIndexOf(array, elemento) {
     for(let i = 0; i < array.length; i++) {
@@ -28,8 +21,6 @@ function meuIndexOf(array, elemento) {
 }
 console.log(meuIndexOf(redesSociais, 'TikTok'));
 
-// includes
-console.log(redesSociais[0] ? true : false);
 
 // Funcao recriada para includes
 function meuIncludes(array, elemento) {
@@ -43,12 +34,6 @@ function meuIncludes(array, elemento) {
 }
 console.log(meuIncludes(redesSociais, 'TikTok'));
 
-// lastIndexOf
-if(redesSociais.length > 0) {
-    console.log(redesSociais.length);
-} else {
-    console.log(-1);
-}
 
 // Funcao recriada para lastIndexOf
 function meuLastIndexOf(array, elemento) {

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Histórico de Navegação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .navegador {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+
+    .pagina-atual {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .pilhas {
+      display: flex;
+      gap: 50px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pilha {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      width: 200px;
+    }
+
+    .pilha h3 {
+      margin-bottom: 10px;
+    }
+
+    .pilha ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pilha li {
+      margin-bottom: 6px;
+      font-size: 14px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulador de Navegação</h1>
+
+  <div class="navegador">
+    <button onclick="voltar()">⬅ Voltar</button>
+    <button onclick="avancar()">Avançar ➡</button>
+    <input type="text" id="enderecoInput" placeholder="Digite um endereço..." />
+    <button onclick="navegarParaInput()">Navegar</button>
+  </div>
+
+  <div class="pagina-atual" id="paginaAtual">Nenhuma página</div>
+
+  <div class="pilhas">
+    <div class="pilha">
+      <h3>Pilha Voltar</h3>
+      <ul id="pilhaVoltar"></ul>
+    </div>
+    <div class="pilha">
+      <h3>Pilha Avançar</h3>
+      <ul id="pilhaAvancar"></ul>
+    </div>
+  </div>
+
+  <script>
+    let pilhaVoltar = [];
+    let pilhaAvancar = [];
+    let paginaAtual = "";
+
+    function atualizarVisual() {
+      document.getElementById("paginaAtual").textContent = paginaAtual || "Nenhuma página";
+
+      const ulVoltar = document.getElementById("pilhaVoltar");
+      ulVoltar.innerHTML = "";
+      pilhaVoltar.slice().reverse().forEach(p => {
+        ulVoltar.innerHTML += `<li>${p}</li>`;
+      });
+
+      const ulAvancar = document.getElementById("pilhaAvancar");
+      ulAvancar.innerHTML = "";
+      pilhaAvancar.slice().reverse().forEach(p => {
+        ulAvancar.innerHTML += `<li>${p}</li>`;
+      });
+    }
+
+    function voltar() {
+      if (pilhaVoltar.length > 0) {
+        pilhaAvancar.push(paginaAtual);
+        paginaAtual = pilhaVoltar.pop();
+        debug("voltar");
+        atualizarVisual();
+      }
+    }
+
+    function avancar() {
+      if (pilhaAvancar.length > 0) {
+        pilhaVoltar.push(paginaAtual);
+        paginaAtual = pilhaAvancar.pop();
+        debug("avancar");
+        atualizarVisual();
+      }
+    }
+
+    function navegar(endereco) {
+      if (paginaAtual !== "") {
+        pilhaVoltar.push(paginaAtual);
+      }
+      paginaAtual = endereco;
+      pilhaAvancar = [];
+      debug("navegar");
+      atualizarVisual();
+    }
+
+    function navegarParaInput() {
+      const input = document.getElementById("enderecoInput");
+      const endereco = input.value.trim();
+      if (endereco !== "") {
+        navegar(endereco);
+        input.value = "";
+      }
+    }
+
+    function debug(acao) {
+      console.log({
+        acao,
+        atual: paginaAtual,
+        historico_voltar: pilhaVoltar.join(', '),
+        historico_avancar: pilhaAvancar.join(', ')
+      });
+    }
+
+    atualizarVisual(); // Inicializa com estado visual vazio
+  </script>
+
+</body>
+</html>
